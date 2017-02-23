@@ -42,7 +42,6 @@ use pocketmine\entity\Projectile;
 use pocketmine\entity\ThrownExpBottle;
 use pocketmine\entity\ThrownPotion;
 use pocketmine\event\block\BlockBreakEvent;
-use pocketmine\event\block\ItemFrameDropItemEvent;
 use pocketmine\event\block\SignChangeEvent;
 use pocketmine\event\entity\EntityCombustByEntityEvent;
 use pocketmine\event\entity\EntityDamageByBlockEvent;
@@ -151,7 +150,6 @@ use pocketmine\network\SourceInterface;
 use pocketmine\permission\PermissibleBase;
 use pocketmine\permission\PermissionAttachment;
 use pocketmine\plugin\Plugin;
-use pocketmine\tile\ItemFrame;
 use pocketmine\tile\Spawnable;
 use pocketmine\tile\Tile;
 use pocketmine\utils\Binary;
@@ -2226,26 +2224,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 		}
 
 		switch($packet::NETWORK_ID){
-			case ProtocolInfo::ITEM_FRAME_DROP_ITEM_PACKET:
-				$tile = $this->level->getTile($this->temporalVector->setComponents($packet->x, $packet->y, $packet->z));
-				if($tile instanceof ItemFrame){
-					$block = $this->level->getBlock($tile);
-					$this->server->getPluginManager()->callEvent($ev = new BlockBreakEvent($this, $block, $this->getInventory()->getItemInHand(), true));
-					if(!$ev->isCancelled()){
-						$item = $tile->getItem();
-						$this->server->getPluginManager()->callEvent($ev = new ItemFrameDropItemEvent($this, $block, $tile, $item));
-						if(!$ev->isCancelled()){
-							if($item->getId() !== Item::AIR){
-								if((mt_rand(0, 10) / 10) < $tile->getItemDropChance()){
-									$this->level->dropItem($tile, $item);
-								}
-								$tile->setItem(Item::get(Item::AIR));
-								$tile->setItemRotation(0);
-							}
-						}else $tile->spawnTo($this);
-					}else $tile->spawnTo($this);
-				}
-				break;
 			case ProtocolInfo::REQUEST_CHUNK_RADIUS_PACKET:
 				/*if($this->spawned){
 					$this->viewDistance = $packet->radius ** 2;
@@ -3622,25 +3600,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 					$this->dataPacket($pk);
 					$this->sendSettings();
 				}
-				break;
-			case ProtocolInfo::ITEM_FRAME_DROP_ITEM_PACKET:
-				if($this->spawned === false or $this->blocked === true or !$this->isAlive()){
-					break;
-				}
-
-				if(($tile = $this->level->getTile($this->temporalVector->setComponents($packet->x, $packet->y, $packet->z))) instanceof ItemFrame){
-					if(!$tile->getItem()->equals($packet->item) and !$this->isCreative(true)){
-						$tile->spawnTo($this);
-						break;
-					}
-
-					if(lcg_value() <= $tile->getItemDropChance() and $packet->item->getId() !== Item::AIR){
-						$this->level->dropItem($tile->getBlock(), $packet->item); //Use the packet item to handle creative drops correctly
-					}
-					$tile->setItem(null);
-					$tile->setItemRotation(0);
-				}
-
 				break;
 			default:
 				break;
