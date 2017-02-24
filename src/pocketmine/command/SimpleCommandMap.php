@@ -50,6 +50,7 @@ use pocketmine\command\defaults\ReloadCommand;
 use pocketmine\command\defaults\SaveCommand;
 use pocketmine\command\defaults\SaveOffCommand;
 use pocketmine\command\defaults\SaveOnCommand;
+use pocketmine\command\defaults\SayCommand;
 use pocketmine\command\defaults\SeedCommand;
 use pocketmine\command\defaults\SetBlockCommand;
 use pocketmine\command\defaults\SetWorldSpawnCommand;
@@ -104,6 +105,7 @@ class SimpleCommandMap implements CommandMap{
 
 		$this->register("pocketmine", new VersionCommand("version"));
 		$this->register("pocketmine", new PluginsCommand("plugins"));
+        $this->register("pocketmine", new SayCommand("say"));
 		$this->register("pocketmine", new SeedCommand("seed"));
 		$this->register("pocketmine", new HelpCommand("help"), null, true);
 		$this->register("pocketmine", new StopCommand("stop"), null, true);
