@@ -95,9 +95,7 @@ use pocketmine\level\particle\Particle;
 use pocketmine\level\sound\BlockPlaceSound;
 use pocketmine\level\sound\Sound;
 use pocketmine\level\particle\DestroyBlockParticle;
-use pocketmine\entity\Lightning;
 use pocketmine\entity\XPOrb;
-use pocketmine\level\weather\Weather;
 
 #include <rules/Level.h>
 
@@ -261,7 +259,6 @@ class Level implements ChunkManager, Metadatable{
 	private $closed = false;
 	
 	/** @var Weather */
-	private $weather;
 
 	private $blockTempData = [];
 
@@ -386,13 +383,6 @@ class Level implements ChunkManager, Metadatable{
 		$this->temporalPosition = new Position(0, 0, 0, $this);
 		$this->temporalVector = new Vector3(0, 0, 0);
 		$this->tickRate = 1;
-
-		$this->weather = new Weather($this, 0);
-		if($this->server->netherEnabled and $this->server->netherName == $this->folderName) $this->setDimension(self::DIMENSION_NETHER);
-		else $this->setDimension(self::DIMENSION_NORMAL);
-		if($this->server->weatherEnabled and $this->getDimension() == self::DIMENSION_NORMAL){
-			$this->weather->setCanCalculate(true);
-		}else $this->weather->setCanCalculate(false);
 	}
 
 	public function setDimension(int $dimension){
@@ -406,9 +396,6 @@ class Level implements ChunkManager, Metadatable{
 	/**
 	 * @return Weather
 	 */
-	public function getWeather(){
-		return $this->weather;
-	}
 
 	public function getTickRate() : int{
 		return $this->tickRate;
@@ -729,8 +716,6 @@ class Level implements ChunkManager, Metadatable{
 			$this->sendTime();
 			$this->sendTimeTicker = 0;
 		}
-
-		$this->weather->calcWeather($currentTick);
 
 		$this->unloadChunks();
 
@@ -2380,48 +2365,12 @@ class Level implements ChunkManager, Metadatable{
 	 * @param int    $z
 	 * @param Player $p
 	 */
-	public function sendLighting(int $x, int $y, int $z, Player $p){
-		$pk = new AddEntityPacket();
-		$pk->type = Lightning::NETWORK_ID;
-		$pk->eid = mt_rand(10000000, 100000000);
-		$pk->x = $x;
-		$pk->y = $y;
-		$pk->z = $z;
-		$pk->metadata = array(3, 3, 3, 3);
-		$p->dataPacket($pk);
-	}
-
 	/**
 	 * Add a lightning
 	 *
 	 * @param Vector3 $pos
 	 * @return Lightning
 	 */
-	public function spawnLightning(Vector3 $pos) : Lightning{
-		$nbt = new CompoundTag("", [
-			"Pos" => new ListTag("Pos", [
-				new DoubleTag("", $pos->getX()),
-				new DoubleTag("", $pos->getY()),
-				new DoubleTag("", $pos->getZ())
-			]),
-			"Motion" => new ListTag("Motion", [
-				new DoubleTag("", 0),
-				new DoubleTag("", 0),
-				new DoubleTag("", 0)
-			]),
-			"Rotation" => new ListTag("Rotation", [
-				new FloatTag("", 0),
-				new FloatTag("", 0)
-			]),
-		]);
-
-		$chunk = $this->getChunk($pos->x >> 4, $pos->z >> 4, false);
-
-		$lightning = new Lightning($chunk, $nbt);
-		$lightning->spawnToAll();
-
-		return $lightning;
-	}
 
 	/**
 	 * Add an experience orb

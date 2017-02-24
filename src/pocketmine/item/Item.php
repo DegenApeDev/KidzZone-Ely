@@ -29,12 +29,6 @@ use pocketmine\Server;
 use pocketmine\block\Block;
 use pocketmine\entity\CaveSpider;
 use pocketmine\entity\Entity;
-use pocketmine\entity\PigZombie;
-use pocketmine\entity\Silverfish;
-use pocketmine\entity\Skeleton;
-use pocketmine\entity\Spider;
-use pocketmine\entity\Witch;
-use pocketmine\entity\Zombie;
 use pocketmine\inventory\Fuel;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\level\Level;
@@ -117,7 +111,6 @@ class Item implements ItemIds, \JsonSerializable{
 			self::$list[self::PAINTING] = Painting::class;
 			self::$list[self::COAL] = Coal::class;
 			self::$list[self::APPLE] = Apple::class;
-			self::$list[self::SPAWN_EGG] = SpawnEgg::class;
 			self::$list[self::DIAMOND] = Diamond::class;
 			self::$list[self::STICK] = Stick::class;
 			self::$list[self::SNOWBALL] = Snowball::class;
@@ -218,7 +211,6 @@ class Item implements ItemIds, \JsonSerializable{
 			self::$list[self::COOKED_CHICKEN] = CookedChicken::class;
 			self::$list[self::GOLD_NUGGET] = GoldNugget::class;
 			self::$list[self::EMERALD] = Emerald::class;
-			self::$list[self::ITEM_FRAME] = ItemFrame::class;
 			self::$list[self::FLOWER_POT] = FlowerPot::class;
 			self::$list[self::CARROT] = Carrot::class;
 			self::$list[self::POTATO] = Potato::class;
@@ -934,18 +926,6 @@ class Item implements ItemIds, \JsonSerializable{
 		$sharpL = $this->getEnchantmentLevel(Enchantment::TYPE_WEAPON_SHARPNESS);
 		if($sharpL > 0){
 			$rec += 0.5 * ($sharpL + 1);
-		}
-
-		if($target instanceof Skeleton or $target instanceof Zombie or
-			$target instanceof Witch or $target instanceof PigZombie){
-			//SMITE    wither skeletons
-			$rec += 2.5 * $this->getEnchantmentLevel(Enchantment::TYPE_WEAPON_SMITE);
-
-		}elseif($target instanceof Spider or $target instanceof CaveSpider or
-			$target instanceof Silverfish){
-			//Bane of Arthropods    wither skeletons
-			$rec += 2.5 * $this->getEnchantmentLevel(Enchantment::TYPE_WEAPON_ARTHROPODS);
-
 		}
 		return $rec;
 	}

@@ -265,8 +265,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	/** @var PermissibleBase */
 	private $perm = null;
 
-	public $weatherData = [0, 0, 0];
-
 	/** @var Vector3 */
 	public $fromPos = null;
 	private $portalTime = 0;
@@ -871,7 +869,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 				$this->dataPacket($pk);
 				$this->shouldSendStatus = true;
 			}
-			$targetLevel->getWeather()->sendWeather($this);
 
 			if($this->spawned){
 				$this->spawnToAll();
@@ -1063,8 +1060,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 
 		$this->server->onPlayerLogin($this);
 		$this->spawnToAll();
-
-		$this->level->getWeather()->sendWeather($this);
 
 		if($this->server->dserverConfig["enable"] and $this->server->dserverConfig["queryAutoUpdate"]){
 			$this->server->updateQuery();
@@ -1907,9 +1902,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 			if($this->isOnFire() or $this->lastUpdate % 10 == 0){
 				if($this->isCreative() and !$this->isInsideOfFire()){
 					$this->extinguish();
-				}elseif($this->getLevel()->getWeather()->isRainy()){
-					if($this->getLevel()->canBlockSeeSky($this)){
-						$this->extinguish();
 					}
 				}
 			}
@@ -2140,8 +2132,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 		$pk->hasBeenLoadedInCreative = 1;
 		$pk->dayCycleStopTime = -1; //TODO: implement this properly
 		$pk->eduMode = 0;
-		$pk->rainLevel = 0; //TODO: implement these properly
-		$pk->lightningLevel = 0;
 		$pk->commandsEnabled = 1;
 		$pk->unknown = "UNKNOWN";
 		$pk->worldName = $this->server->getMotd();
@@ -2183,8 +2173,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 		}
 
 		$this->sendCommandData();
-
-		$this->level->getWeather()->sendWeather($this);
 		$this->forceMovement = $this->teleportPosition = $this->getPosition();
 	}
 

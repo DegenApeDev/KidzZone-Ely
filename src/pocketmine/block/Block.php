@@ -119,7 +119,6 @@ class Block extends Position implements BlockIds, Metadatable{
 			self::$list[self::OBSIDIAN] = Obsidian::class;
 			self::$list[self::TORCH] = Torch::class;
 			self::$list[self::FIRE] = Fire::class;
-			self::$list[self::MONSTER_SPAWNER] = MonsterSpawner::class;
 			self::$list[self::WOOD_STAIRS] = WoodStairs::class;
 			self::$list[self::CHEST] = Chest::class;
 
@@ -281,7 +280,6 @@ class Block extends Position implements BlockIds, Metadatable{
 			self::$list[self::DETECTOR_RAIL] = DetectorRail::class;
 			self::$list[self::TRIPWIRE] = Tripwire::class;
 			self::$list[self::TRIPWIRE_HOOK] = TripwireHook::class;
-			self::$list[self::ITEM_FRAME_BLOCK] = ItemFrame::class;
 			self::$list[self::DISPENSER] = Dispenser::class;
 			self::$list[self::DROPPER] = Dropper::class;
 			self::$list[self::POWERED_REPEATER_BLOCK] = PoweredRepeater::class;
