@@ -1904,7 +1904,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 					$this->extinguish();
 					}
 				}
-			}
 
 			if($this->server->antiFly){
 				if(!$this->isSpectator() and $this->speed !== null){
