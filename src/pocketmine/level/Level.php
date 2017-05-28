@@ -1563,10 +1563,10 @@ class Level implements ChunkManager, Metadatable{
 				return false;
 			}
 
-			$breakTime = $target->getBreakTime($item);
+			$breakTime = ceil($target->getBreakTime($item) * 20);
 
-			if($player->isCreative() and $breakTime > 0.15){
-				$breakTime = 0.15;
+			if($player->isCreative() and $breakTime > 3){
+				$breakTime = 3;
 			}
 
 			if($player->hasEffect(Effect::SWIFTNESS)){
@@ -1577,9 +1577,9 @@ class Level implements ChunkManager, Metadatable{
 				$breakTime *= 1 + (0.3 * ($player->getEffect(Effect::MINING_FATIGUE)->getAmplifier() + 1));
 			}
 
-			$breakTime -= 0.05; //1 tick compensation
+			$breakTime -= 1; //1 tick compensation
 
-			if(!$ev->getInstaBreak() and ($player->lastBreak + $breakTime) > microtime(true)){
+			if(!$ev->getInstaBreak() and ((ceil($player->lastBreak * 20)) + $breakTime) > ceil(microtime(true) * 20)){
 				return false;
 			}
 
