@@ -74,9 +74,9 @@ namespace pocketmine {
 
 	const VERSION = "1.0";
 	const API_VERSION = "3.0.0-ALPHA1";
-	const CODENAME = "Birpen";
-	const MINECRAFT_VERSION = "v1.0.4 alpha";
-	const MINECRAFT_VERSION_NETWORK = "1.0.4";
+	const CODENAME = "KidzBot";
+	const MINECRAFT_VERSION = "v1.0.8";
+	const MINECRAFT_VERSION_NETWORK = "1.0.8";
 	const GENISYS_API_VERSION = '1.9.3';
 
 	/*
