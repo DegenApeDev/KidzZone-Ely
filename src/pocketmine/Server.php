@@ -1707,6 +1707,7 @@ class Server{
 				"rcon.password" => substr(base64_encode(random_bytes(20)), 3, 10),
 				"auto-save" => true,
 				"online-mode" => false,
+                "inventory-slots" => 36,
 			]);
 
 			$onlineMode = $this->getConfigBoolean("online-mode", false);
